@@ -1,0 +1,22 @@
+>> in folder RestApi
+
+1.) alembic:
+- run migration : alembic revision -m "add models" --autogenerate
+- create tables : alembic upgrade head
+- delete tables : alembic downgrade
+2.) run app:
+- python run_app.py
+
+>> in folder tests
+
+3.) run tests:
+- pytest test_user.py
+
+>> in folder RestApi
+
+4.) see coverage:
+- coverage run -m pytest
+- coverage report -m
+
+5.) docker: !!!
+- ...
