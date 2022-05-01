@@ -26,5 +26,5 @@ Simple application for storing users
 > docker-compose up webserver
 
 - - -
-You can check the endpoints through **_Postman_**
+You can check the endpoints through **_Postman_** (Running on http://127.0.0.1:5000)
 - - -
