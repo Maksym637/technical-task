@@ -1,0 +1,27 @@
+version: '3'
+
+networks:
+  flask_app_network:
+    name: flask_app_network
+
+services:
+  mysql:
+    image: mysql:latest
+    hostname: db
+    environment:
+      MYSQL_ROOT_PASSWORD: Barca2381843
+      MYSQL_DATABASE: task
+    ports:
+      - "3307:3306"
+    networks:
+      - flask_app_network
+  webserver:
+    build: .
+    depends_on:
+      - mysql
+    ports:
+       - "5000:5000"
+    networks:
+      - flask_app_network
+    expose:
+      - 5000
