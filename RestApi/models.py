@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import Column, Integer, VARCHAR, DateTime
 
-engine = create_engine('mysql+pymysql://root:Barca2381843@localhost/task')
+engine = create_engine('mysql://root:Barca2381843@db:3306/task') # create_engine('mysql+pymysql://root:Barca2381843@localhost/task')
 engine.connect()
 
 SessionFactory = sessionmaker(bind=engine)
