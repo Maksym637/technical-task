@@ -5,6 +5,7 @@ networks:
     name: flask_app_network
 
 services:
+
   mysql:
     image: mysql:latest
     hostname: db
@@ -15,6 +16,7 @@ services:
       - "3307:3306"
     networks:
       - flask_app_network
+  
   webserver:
     build: .
     depends_on:
@@ -25,3 +27,11 @@ services:
       - flask_app_network
     expose:
       - 5000
+  
+  webserver.test:
+    build: .
+    depends_on:
+      - mysql
+    networks:
+      - flask_app_network
+    entrypoint: python3 -m pytest
