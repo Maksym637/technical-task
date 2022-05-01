@@ -18,5 +18,15 @@
 - coverage run -m pytest
 - coverage report -m
 
-5.) docker: !!!
-- ...
+5.) docker:
+5.1) see all containers:
+- docker ps -a
+5.2) see all running containers:
+- docker ps
+5.3) see all images:
+- docker images | - docker image ls
+5.4) remove all containers:
+- docker container prune
+5.5) build my app:
+- docker-compose up --force-recreate
+- docker-compose up
