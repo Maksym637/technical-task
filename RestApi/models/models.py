@@ -1,11 +1,9 @@
 from datetime import datetime
-from sqlalchemy import create_engine
+from app import engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import Column, Integer, VARCHAR, DateTime
 
-engine = create_engine('mysql+pymysql://root:Barca2381843@localhost/task') # create_engine('mysql+pymysql://root:Barca2381843@localhost/task')
-engine.connect()
 
 SessionFactory = sessionmaker(bind=engine)
 Session = scoped_session(SessionFactory)

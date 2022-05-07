@@ -4,17 +4,16 @@ from marshmallow import ValidationError
 from models import User
 from schemas import UserSchema
 import bcrypt
-import asyncio
 
 
 user = Blueprint("user", __name__)
 
 
-async def is_short_password(string):
+def is_short_password(string):
     return len(string) < 6
 
 
-async def is_simple_password(string):
+def is_simple_password(string):
     flag = True
     for i in range(len(string)):
         for j in range(len(string) - i):
@@ -24,13 +23,10 @@ async def is_simple_password(string):
 
 
 @user.route("/user/", methods=["POST"])
-async def create_user():
+def create_user():
     data = request.get_json(force=True)
 
-    task1 = asyncio.create_task(is_short_password(request.json.get('password', None)))
-    task2 = asyncio.create_task(is_simple_password(request.json.get('password', None)))
-
-    if await task1 and await task2:
+    if is_short_password(request.json.get('password', None)) and is_simple_password(request.json.get('password', None)):
         return "[THIS PASSWORD IS NOT CORRECT]", 400
     
     try:
@@ -64,17 +60,14 @@ def get_user_by_id(id):
 
 
 @user.route("/user/<int:id>/", methods=["PUT"])
-async def update_user_by_id(id):
+def update_user_by_id(id):
     entry = Session.query(User).filter_by(id=id).first()
     if entry is None:
         return Response(status=404, response="[SUCH USER ID DOES NOT EXIST]\n[YOU CAN'T UPDATE HIM]")
 
     data = request.get_json(force=True)
 
-    task1 = asyncio.create_task(is_short_password(request.json.get('password', None)))
-    task2 = asyncio.create_task(is_simple_password(request.json.get('password', None)))
-
-    if await task1 and await task2:
+    if is_short_password(request.json.get('password', None)) and is_simple_password(request.json.get('password', None)):
         return "[THIS PASSWORD IS NOT CORRECT]", 400
     
     try:
@@ -103,18 +96,14 @@ async def patch_user_by_id(id):
 
     data = request.get_json(force=True)
 
-    task1 = asyncio.create_task(is_short_password(request.json.get('password', None)))
-    task2 = asyncio.create_task(is_simple_password(request.json.get('password', None)))
-
-    if await task1 and await task2:
-        return "[THIS PASSWORD IS NOT CORRECT]", 400
-
     try:
         UserSchema().load(data)
     except ValidationError:
         return "[THIS IS A VALIDATION ERROR]", 400
     
     if request.json.get('password') != None:
+        if is_short_password(request.json.get('password', None)) and is_simple_password(request.json.get('password', None)):
+            return "[THIS PASSWORD IS NOT CORRECT]", 400
         hashed_password = bcrypt.hashpw(request.json.get('password').encode("utf-8"), bcrypt.gensalt())
         data.update({"password": hashed_password})
 

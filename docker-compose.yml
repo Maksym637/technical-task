@@ -19,6 +19,8 @@ services:
   
   webserver:
     build: .
+    environment:
+      DATABASE_CONNECT: mysql://root:Barca2381843@db:3306/task
     depends_on:
       - mysql
     ports:
@@ -30,6 +32,8 @@ services:
   
   webserver.test:
     build: .
+    environment:
+      DATABASE_CONNECT: mysql://root:Barca2381843@db:3306/task
     depends_on:
       - mysql
     networks:

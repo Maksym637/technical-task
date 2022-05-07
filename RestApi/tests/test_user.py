@@ -4,12 +4,10 @@ import pytest
 import bcrypt
 import json
 
-
 session = Session()
 app_context = app.app_context()
 app_context.push()
 client = app.test_client()
-
 
 URL = '/user/'
 
@@ -27,9 +25,13 @@ new_user = {
     "register_date": "2022-5-27 12:00:00"
 }
 
-new_fields = {
+new_fields_1 = {
     "username": "new-username-field",
     "password": "new-password-field"
+}
+
+new_fields_2 = {
+    "password": "111"
 }
 
 @pytest.fixture
@@ -44,7 +46,6 @@ def dbUser():
     user = Session.query(User).filter_by(username="maks").first()
     Session.delete(user)
     Session.commit()
-
 
 def test_post_delete():
     response_create = client.post(URL, data=json.dumps(user))
@@ -77,9 +78,11 @@ def test_put():
 
 def test_patch():
     response_create = client.post(URL, data=json.dumps(user))
-    response_patch = client.patch(URL + str(response_create.json["id"]) + "/", data=json.dumps(new_fields))
+    response_patch = client.patch(URL + str(response_create.json["id"]) + "/", data=json.dumps(new_fields_1))
     assert response_patch.status_code == 200
     assert response_patch.json["username"] == "new-username-field"
-    response_patch_nf = client.patch(URL + str(1000) + "/", data=json.dumps(new_fields))
+    response_patch_ep = client.patch(URL + str(response_create.json["id"]) + "/", data=json.dumps(new_fields_2))
+    assert response_patch_ep.status_code == 400
+    response_patch_nf = client.patch(URL + str(1000) + "/", data=json.dumps(new_fields_1))
     assert response_patch_nf.status_code == 404
     client.delete(URL + str(response_create.json["id"]) + "/")
